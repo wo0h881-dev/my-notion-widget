@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리디 스타일 도서 위젯</title>
+    <style>
+        :root { --ridi-blue: #1f8ce6; --ridi-pink: #eb2f96; --bg-black: #121212; }
+        body { background-color: var(--bg-black); color: white; font-family: sans-serif; padding: 15px; margin: 0; }
+        
+        /* 검색창 */
+        .search-container { position: sticky; top: 0; background: var(--bg-black); z-index: 10; padding-bottom: 15px; }
+        input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; }
+
+        /* 도서 리스트 (이미지 기반 그리드) */
+        .book-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .book-card { position: relative; border-radius: 12px; overflow: hidden; background: #1a1a1a; cursor: pointer; transition: transform 0.2s; }
+        .book-card:active { transform: scale(0.95); }
+        .book-card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; }
+        
+        /* 정보 텍스트 */
+        .book-info { padding: 10px; }
+        .category { font-size: 11px; color: #1f8ce6; font-weight: bold; margin-bottom: 5px; }
+        .title { font-size: 14px; font-weight: bold; line-height: 1.3; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .author { font-size: 12px; color: #999; margin-top: 4px; }
+
+        /* 추가 버튼 */
+        .add-btn { position: absolute; bottom: 10px; right: 10px; background: var(--ridi-pink); border: none; border-radius: 50%; width: 32px; height: 32px; color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="책 제목이나 저자를 입력하세요..." onkeyup="if(window.event.keyCode==13){searchBooks()}">
+</div>
+
+<div class="book-grid" id="bookList">
+    </div>
+
+<script>
+    const KAKAO_KEY = '8de61253b56ae754f9cba8454fec7717'; // 카카오 REST API 키를 넣으세요
+    const PIPEDREAM_URL = 'https://eofhox7tlqmz7kv.m.pipedream.net'; // 아까 복사한 파이프드림 주소를 넣으세요
+
+    async function searchBooks() {
+        const query = document.getElementById('searchInput').value;
+        const res = await fetch(`https://dapi.kakao.com/v3/search/book?query=${query}`, {
+            headers: { Authorization: `KakaoAK ${KAKAO_KEY}` }
+        });
+        const data = await res.json();
+        renderBooks(data.documents);
+    }
+
+    function renderBooks(books) {
+        const list = document.getElementById('bookList');
+        list.innerHTML = books.map(book => `
+            <div class="book-card" onclick="sendToNotion('${book.title}', '${book.thumbnail}', '${book.publisher}', '${book.authors[0]}')">
+                <img src="${book.thumbnail || 'https://via.placeholder.com/150x200'}" alt="cover">
+                <div class="book-info">
+                    <div class="category">| 도서 |</div>
+                    <div class="title">${book.title}</div>
+                    <div class="author">${book.authors[0]}</div>
+                </div>
+                <button class="add-btn">→</button>
+            </div>
+        `).join('');
+    }
+
+    async function sendToNotion(title, cover, publisher, author) {
+        if(!confirm(`'${title}'을(를) 노션에 등록할까요?`)) return;
+        
+        await fetch(PIPEDREAM_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, cover, publisher, author })
+        });
+        alert('노션에 추가되었습니다!');
+    }
+</script>
+
+</body>
+</html>
