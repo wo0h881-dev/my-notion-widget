@@ -80,6 +80,17 @@
   cardElement.style.pointerEvents = 'none';
   statusSlot.innerHTML = '<div class="status-msg" style="color:#1f8ce6;">등록 중...</div>';
 
+            card.onclick = () => {
+  console.log('클릭된 아이템:', {
+    title: cleanTitle,
+    author: cleanAuthor,
+    publisher: item.publisher,
+    image: highResImg,
+    category: item.category
+  });
+  sendToNotion(cleanTitle, cleanAuthor, item.publisher, highResImg, card, item.category || '');
+};
+
   try {
     const res = await fetch(GAS_URL, {
   method: 'POST',
@@ -92,6 +103,8 @@
     category: category
   })
 });
+
+      
 
     const data = await res.json();
     if (data.ok) {
