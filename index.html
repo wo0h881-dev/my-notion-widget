@@ -20,14 +20,14 @@
 </head>
 <body>
     <div class="search-box">
-        <input type="text" id="query" placeholder="소설 제목 입력 후 엔터" onkeyup="if(window.event.keyCode==13){search()}">
+        <input type="text" id="query" placeholder="책 제목 입력 후 엔터" onkeyup="if(window.event.keyCode==13){search()}">
         <button onclick="search()">검색</button>
     </div>
     <div id="results"></div>
 
     <script>
         // 🚀 본인의 URL로 꼭 바꿔주세요!
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyN9isDZGmv3McyhLv3UGauweepo_e9sLdjYe-wpDPwatcozmoGkay4bX4anf5V0kPU/exec'; 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycby7VQfhQXv8lyXo_VvSdtmJ1ZDhXr8afXCBcekbJlGEEKirkem5R46uHTSvBH0EQUXZ/exec'; 
 
        async function search() {
             const query = document.getElementById('query').value;
