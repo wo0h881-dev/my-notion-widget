@@ -19,13 +19,13 @@
 </head>
 <body>
     <div class="search-box">
-        <input type="text" id="query" placeholder="책 제목 입력 후 엔터" onkeyup="if(event.keyCode==13){search()}">
+        <input type="text" id="query" placeholder="책 제목 입력 후 엔터1" onkeyup="if(event.keyCode==13){search()}">
         <button onclick="search()">검색</button>
     </div>
     <div id="results"></div>
 
     <script>
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxwB-Zq062dO1B81pCE3pZqrtIwa2tPeBwaUbwnMyqiZTceqJpvHXVxHkA5bFFEaW3A/exec';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbwoUQ8IXUx__HbkmqXvonzk-AQ6UFyWqH-pGBAHz_yKCy3VTxvv_kGmAVwflCuqWlJw/exec';
 
         async function search() {
             const query = document.getElementById('query').value;
