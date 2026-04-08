@@ -27,7 +27,7 @@
 
     <script>
         // 🚀 본인의 URL로 꼭 바꿔주세요!
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbw9koywAYC-VpOGxtjowahzQAkBdLWWrxo_upX2nV0qsNwWBsjV7Z-iBVwUwY3l7Cyi/exec'; 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbycTsm8FrHMMCKRaHSFr1hbuaKxr0qOYxq8p-xpkqS8czHsJ3lXYBV327xMrg7_F-y0/exec'; 
         const PD_URL = 'https://eofhox7tlqmz7kv.m.pipedream.net';
 
        async function search() {
@@ -67,7 +67,7 @@
                         <div class="status-slot"></div>
                     `;
                     // 카드 자체와 내부 슬롯을 함께 전달
-                    card.onclick = () => sendToNotion(cleanTitle, cleanAuthor, item.publisher, highResImg, card);
+                    card.onclick = () => sendToNotion(cleanTitle, cleanAuthor, item.publisher, highResImg, card, item.category || '' );
                     resultsDiv.appendChild(card);
                 });
             } catch (e) {
@@ -75,7 +75,7 @@
             }
         }
 
-        async function sendToNotion(title, author, publisher, img, cardElement) {
+        async function sendToNotion(title, author, publisher, img, cardElement, category = '') {
             const statusSlot = cardElement.querySelector('.status-slot');
             cardElement.style.opacity = '0.6';
             cardElement.style.pointerEvents = 'none';
@@ -88,8 +88,9 @@
                     body: JSON.stringify({
                         title: title,
                         author: author,
-                        publisher: publisher ? publisher.replace(/<[^>]*>?/gm, '') : '웹소설',
-                        cover: img
+                        publisher: publisher ? publisher.replace(/<[^>]*>?/gm, '') : '',
+    cover: img,
+    category: category
                     })
                 });
                 if(res.ok) {
