@@ -27,8 +27,7 @@
 
     <script>
         // 🚀 본인의 URL로 꼭 바꿔주세요!
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbycTsm8FrHMMCKRaHSFr1hbuaKxr0qOYxq8p-xpkqS8czHsJ3lXYBV327xMrg7_F-y0/exec'; 
-        const PD_URL = 'https://eofhox7tlqmz7kv.m.pipedream.net';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyN9isDZGmv3McyhLv3UGauweepo_e9sLdjYe-wpDPwatcozmoGkay4bX4anf5V0kPU/exec'; 
 
        async function search() {
             const query = document.getElementById('query').value;
@@ -38,9 +37,9 @@
 
             try {
                 const response = await fetch(GAS_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ query: query })
-                });
+  method: 'POST',
+  body: JSON.stringify({ action: 'search', query: query })
+});
                 const data = await response.json();
                 resultsDiv.innerHTML = '';
                 
@@ -76,34 +75,36 @@
         }
 
         async function sendToNotion(title, author, publisher, img, cardElement, category = '') {
-            const statusSlot = cardElement.querySelector('.status-slot');
-            cardElement.style.opacity = '0.6';
-            cardElement.style.pointerEvents = 'none';
-            statusSlot.innerHTML = '<div class="status-msg" style="color:#1f8ce6;">등록 중...</div>';
+  const statusSlot = cardElement.querySelector('.status-slot');
+  cardElement.style.opacity = '0.6';
+  cardElement.style.pointerEvents = 'none';
+  statusSlot.innerHTML = '<div class="status-msg" style="color:#1f8ce6;">등록 중...</div>';
 
-            try {
-                const res = await fetch(PD_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        title: title,
-                        author: author,
-                        publisher: publisher ? publisher.replace(/<[^>]*>?/gm, '') : '',
-    cover: img,
-    category: category
-                    })
-                });
-                if(res.ok) {
-                    statusSlot.innerHTML = '<div class="status-msg" style="color:green;">✅ 등록 완료!</div>';
-                } else {
-                    throw new Error();
-                }
-            } catch (e) {
-                statusSlot.innerHTML = '<div class="status-msg" style="color:red;">❌ 실패</div>';
-                cardElement.style.opacity = '1';
-                cardElement.style.pointerEvents = 'auto';
-            }
-        }
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'update',
+        title: title,
+        author: author,
+        publisher: publisher ? publisher.replace(/<[^>]*>?/gm, '') : '',
+        cover: img,
+        category: category
+      })
+    });
+
+    const data = await res.json();
+    if (data.ok) {
+      statusSlot.innerHTML = '<div class="status-msg" style="color:green;">✅ 등록 완료!</div>';
+    } else {
+      throw new Error();
+    }
+  } catch (e) {
+    statusSlot.innerHTML = '<div class="status-msg" style="color:red;">❌ 실패</div>';
+    cardElement.style.opacity = '1';
+    cardElement.style.pointerEvents = 'auto';
+  }
+}
     </script>
 </body>
 </html>
